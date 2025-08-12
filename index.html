@@ -33,6 +33,20 @@
         background: #ffb300;
         color: white;
     }
+    .delete-button {
+        background: #e53935;
+        border: none;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 6px;
+        padding: 4px 8px;
+        margin-left: 10px;
+        user-select: none;
+    }
+    .delete-button:hover {
+        background: #b71c1c;
+    }
     .likes-count {
         margin-left: 6px;
         font-weight: bold;
@@ -45,6 +59,11 @@
 </head>
 <body>
 <h1>여름 방학 나의 추억</h1>
+
+<div style="text-align:center; margin-bottom: 20px;">
+  <img src="https://cdn.pixabay.com/photo/2016/08/11/23/33/summer-1581955_1280.png" alt="귀여운 여름 이미지" style="max-width:150px; width: 100%; height: auto;" />
+</div>
+
 <div class="lyrics-container">
     <div class="lyrics">
         <h2>여행을 떠나요</h2>
@@ -118,20 +137,15 @@
 
     <table id="commentsTable">
         <thead>
-            <tr><th>이름</th><th>댓글</th><th>좋아요</th></tr>
+            <tr><th>이름</th><th>댓글</th><th>좋아요 / 삭제</th></tr>
         </thead>
         <tbody></tbody>
     </table>
 </div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js"></script>
-
-<!-- Firebase v10+ 모듈 CDN -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-  import { getDatabase, ref, push, set, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+  import { getDatabase, ref, push, set, onValue, runTransaction, remove } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCtBTzq6aIgRzWDB2gfG2LBK19Y4TYCj4w",
@@ -172,6 +186,15 @@
     runTransaction(likeRef, currentLikes => (currentLikes || 0) + 1);
   }
 
+  function deleteComment(commentKey) {
+    if (confirm('이 댓글을 삭제하시겠습니까?')) {
+      const commentRef = ref(db, 'comments/' + commentKey);
+      remove(commentRef)
+        .then(() => alert('댓글이 삭제되었습니다.'))
+        .catch(e => alert('삭제 실패: ' + e.message));
+    }
+  }
+
   onValue(ref(db, 'comments'), snapshot => {
     const tbody = document.querySelector('#commentsTable tbody');
     tbody.innerHTML = '';
@@ -189,6 +212,7 @@
       tdComment.textContent = data.comment;
 
       const tdLike = document.createElement('td');
+
       const likeBtn = document.createElement('button');
       likeBtn.textContent = '👍';
       likeBtn.className = 'like-button';
@@ -199,8 +223,15 @@
       likeCount.className = 'likes-count';
       likeCount.textContent = data.likes || 0;
 
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '삭제';
+      deleteBtn.className = 'delete-button';
+      deleteBtn.title = '댓글 삭제';
+      deleteBtn.onclick = () => deleteComment(key);
+
       tdLike.appendChild(likeBtn);
       tdLike.appendChild(likeCount);
+      tdLike.appendChild(deleteBtn);
 
       tr.appendChild(tdName);
       tr.appendChild(tdComment);
@@ -210,5 +241,9 @@
     });
   });
 
-  window.addComment = addComment;  // 글로벌 함수로 등록 (버튼에서 호출 가능)
+  window.addComment = addComment;
+  window.deleteComment = deleteComment;
 </script>
+
+</body>
+</html>
