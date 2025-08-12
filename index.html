@@ -128,87 +128,87 @@
 <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js"></script>
 
-<script>
-    // Firebase 초기화 설정
-    const firebaseConfig = {
-        apiKey: "AIzaSyCtBTzq6aIgRzWDB2gfG2LBK19Y4TYCj4w",
-        authDomain: "summer-memory-bc163.firebaseapp.com",
-        databaseURL: "https://summer-memory-bc163-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "summer-memory-bc163",
-        storageBucket: "summer-memory-bc163.firebasestorage.app",
-        messagingSenderId: "1014179818008",
-        appId: "1:1014179818008:web:4570325a33a90582d2b16d"
-    };
+<!-- Firebase v10+ 모듈 CDN -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+  import { getDatabase, ref, push, set, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
 
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+  const firebaseConfig = {
+    apiKey: "AIzaSyCtBTzq6aIgRzWDB2gfG2LBK19Y4TYCj4w",
+    authDomain: "summer-memory-bc163.firebaseapp.com",
+    databaseURL: "https://summer-memory-bc163-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "summer-memory-bc163",
+    storageBucket: "summer-memory-bc163.firebasestorage.app",
+    messagingSenderId: "1014179818008",
+    appId: "1:1014179818008:web:4570325a33a90582d2b16d"
+  };
 
-    function addComment() {
-        const name = document.getElementById('nameInput').value.trim();
-        const comment = document.getElementById('commentInput').value.trim();
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-        if (!name || !comment) {
-            alert('이름과 댓글을 모두 입력해주세요.');
-            return;
-        }
+  function addComment() {
+    const name = document.getElementById('nameInput').value.trim();
+    const comment = document.getElementById('commentInput').value.trim();
 
-        const newCommentRef = db.ref('comments').push();
-        newCommentRef.set({
-            name: name,
-            comment: comment,
-            likes: 0,
-            timestamp: Date.now()
-        });
-
-        document.getElementById('nameInput').value = '';
-        document.getElementById('commentInput').value = '';
+    if (!name || !comment) {
+      alert('이름과 댓글을 모두 입력해주세요.');
+      return;
     }
 
-    function likeComment(commentKey, currentLikes) {
-        const commentRef = db.ref('comments/' + commentKey + '/likes');
-        commentRef.transaction(currentValue => {
-            return (currentValue || 0) + 1;
-        });
-    }
-
-    // 댓글 실시간 업데이트
-    db.ref('comments').on('value', snapshot => {
-        const tbody = document.querySelector('#commentsTable tbody');
-        tbody.innerHTML = '';
-
-        snapshot.forEach(childSnap => {
-            const key = childSnap.key;
-            const data = childSnap.val();
-
-            const tr = document.createElement('tr');
-
-            const tdName = document.createElement('td');
-            tdName.textContent = data.name;
-
-            const tdComment = document.createElement('td');
-            tdComment.textContent = data.comment;
-
-            const tdLike = document.createElement('td');
-            const likeBtn = document.createElement('button');
-            likeBtn.textContent = '👍';
-            likeBtn.className = 'like-button';
-            likeBtn.title = '좋아요';
-            likeBtn.onclick = () => likeComment(key, data.likes);
-
-            const likeCount = document.createElement('span');
-            likeCount.className = 'likes-count';
-            likeCount.textContent = data.likes || 0;
-
-            tdLike.appendChild(likeBtn);
-            tdLike.appendChild(likeCount);
-
-            tr.appendChild(tdName);
-            tr.appendChild(tdComment);
-            tr.appendChild(tdLike);
-
-            tbody.appendChild(tr);
-        });
+    const newCommentRef = push(ref(db, 'comments'));
+    set(newCommentRef, {
+      name: name,
+      comment: comment,
+      likes: 0,
+      timestamp: Date.now()
     });
+
+    document.getElementById('nameInput').value = '';
+    document.getElementById('commentInput').value = '';
+  }
+
+  function likeComment(commentKey) {
+    const likeRef = ref(db, 'comments/' + commentKey + '/likes');
+    runTransaction(likeRef, currentLikes => (currentLikes || 0) + 1);
+  }
+
+  onValue(ref(db, 'comments'), snapshot => {
+    const tbody = document.querySelector('#commentsTable tbody');
+    tbody.innerHTML = '';
+
+    snapshot.forEach(childSnap => {
+      const key = childSnap.key;
+      const data = childSnap.val();
+
+      const tr = document.createElement('tr');
+
+      const tdName = document.createElement('td');
+      tdName.textContent = data.name;
+
+      const tdComment = document.createElement('td');
+      tdComment.textContent = data.comment;
+
+      const tdLike = document.createElement('td');
+      const likeBtn = document.createElement('button');
+      likeBtn.textContent = '👍';
+      likeBtn.className = 'like-button';
+      likeBtn.title = '좋아요';
+      likeBtn.onclick = () => likeComment(key);
+
+      const likeCount = document.createElement('span');
+      likeCount.className = 'likes-count';
+      likeCount.textContent = data.likes || 0;
+
+      tdLike.appendChild(likeBtn);
+      tdLike.appendChild(likeCount);
+
+      tr.appendChild(tdName);
+      tr.appendChild(tdComment);
+      tr.appendChild(tdLike);
+
+      tbody.appendChild(tr);
+    });
+  });
+
+  window.addComment = addComment;  // 글로벌 함수로 등록 (버튼에서 호출 가능)
 </script>
-</body>
-</html>
