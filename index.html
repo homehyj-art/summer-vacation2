@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>여름 방학 나의 추억</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+    body { font-family: 'Jua', sans-serif; background-color: #f0f9ff; margin: 20px; }
+    h1 { text-align: center; margin-bottom: 30px; }
+    .lyrics-container { display: flex; gap: 20px; justify-content: space-around; flex-wrap: wrap; }
+    .lyrics { background: #fff; padding: 15px; border-radius: 12px; width: 45%; min-width: 300px; white-space: pre-line; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow-y: auto; max-height: 400px; }
+    .lyrics h2 { text-align: center; margin-bottom: 15px; }
+    .comment-section { margin-top: 30px; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    textarea, input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Jua', sans-serif; }
+    button { padding: 8px 16px; background-color: #2196f3; color: white; border: none; cursor: pointer; border-radius: 6px; font-size: 14px; }
+    button:hover { background-color: #1976d2; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: middle; }
+    th { background-color: #f2f2f2; }
+    .like-button {
+        background: #ffca28;
+        border: none;
+        color: #444;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 6px;
+        padding: 4px 8px;
+        margin-left: 10px;
+        user-select: none;
+    }
+    .like-button:hover {
+        background: #ffb300;
+        color: white;
+    }
+    .likes-count {
+        margin-left: 6px;
+        font-weight: bold;
+        vertical-align: middle;
+    }
+    @media (max-width: 768px) {
+        .lyrics { width: 100%; }
+    }
+</style>
+</head>
+<body>
+<h1>여름 방학 나의 추억</h1>
+<div class="lyrics-container">
+    <div class="lyrics">
+        <h2>여행을 떠나요</h2>
+푸른 언덕에 배낭을 메고
+황금빛 태양 축제를 여는
+광야를 향해서 계곡을 향해서
+먼 동이 트는 이른 아침에
+도시의 소음 수 많은 사람
+빌딩 숲속을 벗어나봐요
+메아리 소리가 들려오는
+계곡속의 흐르는 물찾아
+그곳으로 여행을 떠나요
+굽이 또 굽이 깊은 산중에
+시원한 바람 나를 반기네
+하늘을 보며 노래 부르세
+메아리 소리가 들려오는
+계곡속의 흐르는 물찾아
+그곳으로 여행을 떠나요
+여행을 떠나요
+즐거운 마음으로
+모두 함께 떠나요
+    </div>
+
+    <div class="lyrics">
+        <h2>다시 여기 바닷가</h2>
+나 다시 또 설레어
+이렇게 너를 만나서
+함께 하고 있는 지금 이 공기가
+다시는 널 볼 수 없을 거라고
+추억일 뿐이라 사람 속에 꼭 넣어뒀는데
+흐르는 시간 속에서 너와 내 기억은
+점점 희미해져만 가
+끝난 줄 알았어 지나여름 바닷가
+너와 나 다툼이 파도에 취해서 노래하며
+같은 꿈을 꾸었지 다시 여기 바닷가
+이제는 말하고 싶어
+네가 있었기에 내가 더욱 빛나
+별이 되었다고
+다들 덥다고 막 짜증나
+괜찮아 우리 둘은 따뜻해
+바비 풍당 빠져버린 널
+이젠 구하러 가지 않을 거야
+모래 위 퍼피퍼피퍼피를 써
+밀물이 밀려와도 못 지워
+추억이 돼 변한 것 느낀
+너랑 다시 한번 바다 보고 싶어
+흐르는 시간 속에서 너와 내 기억은
+점점 희미해져만 가 끝난 줄 알았어
+지나여름 바닷가 너와 나 다툼이
+파도에 취해서 노래하며
+같은 꿈을 꾸었지 다시 여기 바닷가
+이제는 말하고 싶어
+네가 있었기에 내가 더욱 빛나
+별이 되었다고
+시간이 갈수록 또 맞물린 너와 나
+소중한 사랑을 영원히 간직해줘
+지난 여름 바닷가 너와 나 다툼이
+파도에 취해서 노래하며
+같은 꿈을 꾸었지 다시 여기 바닷가
+이제는 말하고 싶어
+네가 있었기에 내가 더욱 빛나
+별이 되었다고
+    </div>
+</div>
+
+<div class="comment-section">
+    <h2>추억 공유 게시판</h2>
+    <input type="text" id="nameInput" placeholder="이름을 입력하세요" />
+    <textarea id="commentInput" placeholder="여름 방학에 겪은 경험을 작성하세요..."></textarea>
+    <button onclick="addComment()">댓글 달기</button>
+
+    <table id="commentsTable">
+        <thead>
+            <tr><th>이름</th><th>댓글</th><th>좋아요</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js"></script>
+
+<script>
+    // Firebase 초기화 설정
+    const firebaseConfig = {
+        apiKey: "AIzaSyCtBTzq6aIgRzWDB2gfG2LBK19Y4TYCj4w",
+        authDomain: "summer-memory-bc163.firebaseapp.com",
+        databaseURL: "https://summer-memory-bc163-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "summer-memory-bc163",
+        storageBucket: "summer-memory-bc163.firebasestorage.app",
+        messagingSenderId: "1014179818008",
+        appId: "1:1014179818008:web:4570325a33a90582d2b16d"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function addComment() {
+        const name = document.getElementById('nameInput').value.trim();
+        const comment = document.getElementById('commentInput').value.trim();
+
+        if (!name || !comment) {
+            alert('이름과 댓글을 모두 입력해주세요.');
+            return;
+        }
+
+        const newCommentRef = db.ref('comments').push();
+        newCommentRef.set({
+            name: name,
+            comment: comment,
+            likes: 0,
+            timestamp: Date.now()
+        });
+
+        document.getElementById('nameInput').value = '';
+        document.getElementById('commentInput').value = '';
+    }
+
+    function likeComment(commentKey, currentLikes) {
+        const commentRef = db.ref('comments/' + commentKey + '/likes');
+        commentRef.transaction(currentValue => {
+            return (currentValue || 0) + 1;
+        });
+    }
+
+    // 댓글 실시간 업데이트
+    db.ref('comments').on('value', snapshot => {
+        const tbody = document.querySelector('#commentsTable tbody');
+        tbody.innerHTML = '';
+
+        snapshot.forEach(childSnap => {
+            const key = childSnap.key;
+            const data = childSnap.val();
+
+            const tr = document.createElement('tr');
+
+            const tdName = document.createElement('td');
+            tdName.textContent = data.name;
+
+            const tdComment = document.createElement('td');
+            tdComment.textContent = data.comment;
+
+            const tdLike = document.createElement('td');
+            const likeBtn = document.createElement('button');
+            likeBtn.textContent = '👍';
+            likeBtn.className = 'like-button';
+            likeBtn.title = '좋아요';
+            likeBtn.onclick = () => likeComment(key, data.likes);
+
+            const likeCount = document.createElement('span');
+            likeCount.className = 'likes-count';
+            likeCount.textContent = data.likes || 0;
+
+            tdLike.appendChild(likeBtn);
+            tdLike.appendChild(likeCount);
+
+            tr.appendChild(tdName);
+            tr.appendChild(tdComment);
+            tr.appendChild(tdLike);
+
+            tbody.appendChild(tr);
+        });
+    });
+</script>
+</body>
+</html>
